@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste 1</title>
+    <style>
+        body {
+            background-color: rgb(129, 248, 135);
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-image: url('Cenarios/Floresta\ negra\ 1.jpg'); /* Fundo de imagem */
+            background-size: cover;
+            background-position: center;
+        }
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 3em;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+        #player {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 50%; /* Inicia no centro vertical */
+            left: 50%; /* Inicia no centro horizontal */
+            display: none;
+            background: url('Imagens/Perso_1-removebg-preview.png') no-repeat center center;
+            background-size: contain;
+        }
+
+        /* Animação de ataque */
+        @keyframes attackAnim {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(10px); /* Movimento do ataque */
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .attacking {
+            animation: attackAnim 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Beta 1</h1>
+        <button onclick="startGame()">Jogar</button>
+    </div>
+    <div id="player"></div>
+
+    <script>
+        let player = null;
+        let posX = 0; 
+        let posY = 0; 
+        const speed = 20;
+
+        function startGame() {
+            document.getElementById('game-container').style.display = 'none';
+            player = document.getElementById('player');
+            player.style.display = 'block';
+            posX = window.innerWidth / 2 - player.offsetWidth / 2; // Centraliza na tela
+            posY = window.innerHeight / 2 - player.offsetHeight / 2; // Centraliza na tela
+            player.style.left = posX + 'px';
+            player.style.top = posY + 'px';
+            document.addEventListener('keydown', movePlayer);
+            document.addEventListener('keydown', attack);
+        }
+
+        function movePlayer(event) {
+            if (!player) return;
+            switch (event.key) {
+                case 'ArrowLeft':
+                    posX = Math.max(0, posX - speed); // Impede que saia da tela para a esquerda
+                    break;
+                case 'ArrowRight':
+                    posX = Math.min(window.innerWidth - player.offsetWidth, posX + speed); // Impede que saia da tela para a direita
+                    break;
+            }
+            player.style.left = posX + 'px';
+        }
+
+        function attack(event) {
+            if (event.key === ' ') { // Se pressionar a barra de espaço o personagem ataca!
+                player.classList.add('attacking');
+                setTimeout(() => {
+                    player.classList.remove('attacking');
+                }, 500); // Duração da animação de ataque (500ms)
+            }
+        }
+    </script>
+</body>
+</html>
